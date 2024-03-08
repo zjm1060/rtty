@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <netdb.h>
 #include <ev.h>
+#include <net/if.h>
 
 #include "list.h"
 #include "net.h"
