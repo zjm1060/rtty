@@ -301,7 +301,7 @@ void http_request(struct rtty *rtty, int len)
 
     list_add(&conn->head, &rtty->http_conns);
 
-    sock = tcp_connect_sockaddr(rtty->loop, (struct sockaddr *)&addrin, sizeof(addrin), on_connected, conn);
+    sock = tcp_connect_sockaddr(rtty->loop, (struct sockaddr *)&addrin, sizeof(addrin), rtty->ifname, on_connected, conn);
     if (sock < 0)
         http_conn_free(conn);
 }

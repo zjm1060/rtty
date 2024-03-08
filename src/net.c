@@ -131,7 +131,7 @@ int tcp_connect_sockaddr(struct ev_loop *loop, const struct sockaddr *addr, sock
     if(ifname && strlen(ifname)){
         struct ifreq ifr;
         memset(&ifr, 0, sizeof(ifr));
-		snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), ifname);
+		snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "%s", ifname);
         if (setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifr, sizeof(ifr)) < 0) {
             log_warn("SO_BINDTODEVICE ERROR\n");
 		}
