@@ -651,7 +651,7 @@ static void rtty_timer_cb(struct ev_loop *loop, struct ev_timer *w, int revents)
             return;
         rtty->active = now;
         log_err("rtty reconnecting...\n");
-        tcp_connect(rtty->loop, rtty->host, rtty->port, on_net_connected, rtty);
+        tcp_connect(rtty->loop, rtty->host, rtty->port, rtty->ifname, on_net_connected, rtty);
         return;
     }
 
@@ -702,7 +702,7 @@ int rtty_start(struct rtty *rtty)
     ev_timer_init(&rtty->tmr, rtty_timer_cb, 1.0, 1.0);
     ev_timer_start(rtty->loop, &rtty->tmr);
 
-    if (tcp_connect(rtty->loop, rtty->host, rtty->port, on_net_connected, rtty) < 0
+    if (tcp_connect(rtty->loop, rtty->host, rtty->port, rtty->ifname, on_net_connected, rtty) < 0
             && !rtty->reconnect)
         return -1;
 

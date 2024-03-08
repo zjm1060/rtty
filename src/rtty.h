@@ -82,6 +82,7 @@ struct tty {
 
 struct rtty {
     const char *host;
+    const char *ifname;
     int port;
     int sock;
     const char *devid;

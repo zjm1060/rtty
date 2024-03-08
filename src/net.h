@@ -28,7 +28,7 @@
 #include <sys/socket.h>
 #include <ev.h>
 
-int tcp_connect(struct ev_loop *loop, const char *host, int port,
+int tcp_connect(struct ev_loop *loop, const char *host, int port, const char *ifname,
                 void (*on_connected)(int sock, void *arg), void *arg);
 
 int tcp_connect_sockaddr(struct ev_loop *loop, const struct sockaddr *addr, socklen_t addrlen,

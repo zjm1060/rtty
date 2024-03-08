@@ -115,7 +115,7 @@ static void wait_connect(struct ev_loop *loop, int sock, int timeout,
     ev_io_start(loop, &ctx->iow);
 }
 
-int tcp_connect_sockaddr(struct ev_loop *loop, const struct sockaddr *addr, socklen_t addrlen,
+int tcp_connect_sockaddr(struct ev_loop *loop, const struct sockaddr *addr, socklen_t addrlen, const char *ifname,
                 void (*on_connected)(int sock, void *arg), void *arg)
 {
     int sock;
@@ -124,6 +124,15 @@ int tcp_connect_sockaddr(struct ev_loop *loop, const struct sockaddr *addr, sock
     if (sock < 0) {
         log_err("create socket failed: %s\n", strerror(errno));
         return -1;
+    }
+
+    if(ifname && strlen(ifname)){
+        struct ifreq ifr;
+        memset(&ifr, 0, sizeof(ifr));
+		snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), ifname);
+        if (setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifr, sizeof(ifr)) < 0) {
+            log_warn("SO_BINDTODEVICE ERROR\n");
+		}
     }
 
     if (connect(sock, addr, addrlen) < 0) {
@@ -143,7 +152,7 @@ err:
     return -1;
 }
 
-int tcp_connect(struct ev_loop *loop, const char *host, int port,
+int tcp_connect(struct ev_loop *loop, const char *host, int port, const char *ifname,
                 void (*on_connected)(int sock, void *arg), void *arg)
 {
     struct sockaddr *addr = NULL;
@@ -181,7 +190,7 @@ int tcp_connect(struct ev_loop *loop, const char *host, int port,
         goto free_addrinfo;
     }
 
-    sock = tcp_connect_sockaddr(loop, addr, addrlen, on_connected, arg);
+    sock = tcp_connect_sockaddr(loop, addr, addrlen, ifname, on_connected, arg);
 
 free_addrinfo:
     freeaddrinfo(result);

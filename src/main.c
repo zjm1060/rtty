@@ -83,6 +83,7 @@ static void usage(const char *prog)
             "                               character:letter, number, underline and short line)\n"
             "      -h, --host=string        Server's host or ipaddr(Default is localhost)\n"
             "      -p, --port=number        Server port(Default is 5912)\n"
+            "      -i                       Set the interface used to connect(eth0, ppp0 ...)\n"
             "      -d, --description=string Add a description to the device(Maximum 126 bytes)\n"
             "      -a                       Auto reconnect to the server\n"
 #ifdef SSL_SUPPORT
@@ -106,13 +107,14 @@ static void usage(const char *prog)
 
 int main(int argc, char **argv)
 {
-    char shortopts[32] = "I:h:p:d:aDt:f:RS:vV";
+    char shortopts[32] = "I:h:p:i:d:aDt:f:RS:vV";
     struct ev_loop *loop = EV_DEFAULT;
     struct ev_signal signal_watcher;
     bool background = false;
     bool verbose = false;
     struct rtty rtty = {
         .host = "localhost",
+        .ifname = NULL,
         .port = 5912,
         .loop = loop,
         .sock = -1
@@ -144,6 +146,9 @@ int main(int argc, char **argv)
             break;
         case 'h':
             rtty.host = optarg;
+            break;
+        case 'i':
+            rtty.ifname = optarg;
             break;
         case 'p':
             rtty.port = atoi(optarg);
