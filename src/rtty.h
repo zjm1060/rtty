@@ -39,7 +39,7 @@
 
 #define RTTY_PROTO_VER              4
 #define RTTY_MAX_TTY                10
-#define RTTY_HEARTBEAT_INTEVAL      5.0
+#define RTTY_HEARTBEAT_INTEVAL      120.0
 #define RTTY_TTY_TIMEOUT            600
 #define RTTY_TTY_ACK_BLOCK          4096
 
